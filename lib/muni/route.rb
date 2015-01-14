@@ -3,6 +3,7 @@ require 'xmlsimple'
 
 require 'muni/stop'
 require 'muni/direction'
+require 'muni/vehicle_location'
 
 module Muni
   class Route < Base
@@ -18,7 +19,7 @@ module Muni
     def inbound
       directions.select{ |dir| dir.name =~ /inbound/i }.first
     end
-
+    
     class << self
       def find(tag)
         if tag == :all
@@ -70,6 +71,8 @@ module Muni
                 :stops => direction_stops
             })
           end
+          
+          route.vehicle_locations = send(:fetch, :vehicleLocations, r: route.tag, t: Time.now.to_i)
 
           route
         end
